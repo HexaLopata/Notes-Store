@@ -9,8 +9,8 @@ services:
     depends_on:
       - postgres
     volumes:
-      - ./:/notes_store
-      - ./static:/notes_store/static
+      - ./Notes-Store/:/notes_store
+      - ./Notes-Store/static:/notes_store/static
     expose:
       - 8000
 
@@ -32,7 +32,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./static:/var/www/html/static
+      - ./Notes-Store/static:/var/www/html/static
       - ./nginx-conf.d:/etc/nginx/conf.d
 
 volumes:

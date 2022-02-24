@@ -15,9 +15,8 @@ class UserSerializer(serializers.Serializer):
         return user
 
     def validate_username(self, value):
-        if (match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', value) is None) and \
-            (match(r'^\+[0-9]{11,13}$', value) is None):
-            raise ValidationError('Email or phone number is invalid')
+        if match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', value) is None:
+            raise ValidationError('Email is invalid')
             
         if User.objects.filter(username=value).exists():
             raise ValidationError('User already exists')

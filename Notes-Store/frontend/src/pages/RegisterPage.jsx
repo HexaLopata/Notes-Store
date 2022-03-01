@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Form, Button, Container } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { register, setError } from '../redux/reducers/actions'
+import { register, showError } from '../redux/reducers/actions'
 
 const RegisterPage = ({ csrf, register, showError }) => {
     const [email, setEmail] = useState('')
@@ -59,7 +59,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         register: (email, password, csrf) => dispatch(register(email, password, csrf)),
-        showError: (error) => dispatch(setError(error))
+        showError: (error) => dispatch(showError(error))
     }
 }
 

@@ -1,4 +1,4 @@
-import { SET_IS_AUTH } from './actionsTypes'
+import { SET_IS_AUTH } from './actionTypes'
 
 const defaultState = {
     isAuthenticated: false,

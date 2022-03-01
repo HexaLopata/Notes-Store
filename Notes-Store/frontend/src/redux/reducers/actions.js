@@ -1,8 +1,10 @@
 import AuthService from '../../services/AuthService'
-import { SET_IS_FORM_UPLOADING, SET_INIT, SET_CSRF, SET_ERROR } from './appReducer/actionTypes'
-import { SET_IS_AUTH } from './authReducer/actionsTypes'
+import { SET_IS_FORM_UPLOADING, SET_INIT, SET_CSRF, HIDE_ERROR, SHOW_ERROR, SHOW_MESSAGE, HIDE_MESSAGE } from './appReducer/actionTypes'
+import { SET_IS_AUTH } from './authReducer/actionTypes'
+import { ADD_NOTES, DELETE_NOTE, SET_NOTES } from './noteReducer/actionTypes'
 import Cookies from 'universal-cookie'
 import TranslationService from '../../services/TranslationService'
+import NotesService from '../../services/NotesService'
 
 const setIsAuth = (isAuthenticated) => {
     return {
@@ -14,7 +16,7 @@ const setIsAuth = (isAuthenticated) => {
 const handleError = (error, dispatch) => {
     const ts = new TranslationService()
     if (error.response.data['error'])
-        dispatch(setError(ts.translate(error.response.data['error'])))
+        dispatch(showError(ts.translate(error.response.data['error'])))
     else {
         let errorMessage = ''
         for (const key in error.response.data) {
@@ -25,7 +27,7 @@ const handleError = (error, dispatch) => {
             errorMessage += '\n'
             
         }
-        dispatch(setError(errorMessage))
+        dispatch(showError(errorMessage))
     }
 }
 
@@ -48,7 +50,7 @@ export const login = (email, password, csrf) => {
             dispatch(setCSRF(''))
             dispatch(setIsFormUploading(false))
             dispatch(setIsAuth(true))
-            dispatch(setError(''))
+            dispatch(hideError())
         }).catch((error) => {
             dispatch(setIsFormUploading(false))
             handleError(error, dispatch)
@@ -61,13 +63,56 @@ export const register = (email, password, csrf) => {
         dispatch(setIsFormUploading(true))
         AuthService.register(email, password, csrf).then((_) => {
             dispatch(setIsFormUploading(false))
-            dispatch(setError(''))
+            dispatch(hideError())
         }).catch((error) => {
             dispatch(setIsFormUploading(false))
             handleError(error, dispatch)
         })
     }
 }
+
+export const fetchNotes = () => {
+    return (dispatch) => {
+        NotesService.fetchNotes().then((response) => {
+            if (response.status == 200) {
+                dispatch(setNotes(response.data))
+            }
+        }).catch((error) => {
+            handleError(error, dispatch)
+        })
+    }
+}
+
+export const sendNote = (note, csrf) => {
+    return (dispatch) => {
+        dispatch(setIsFormUploading(true))
+        NotesService.sendNote(note, csrf).then((response) => {
+            if (response.status == 201) {
+                dispatch(setIsFormUploading(false))
+                dispatch(addNote(response.data))
+                dispatch(showMessage('Заметка успешно добавлена'))
+            }
+        }).catch((error) => {``
+            handleError(error, dispatch)
+        })
+    }
+} 
+
+export const requestDeleteNote = (note, csrf) => {
+    return (dispatch) => {
+        dispatch(setIsFormUploading(true))
+        NotesService.deleteNote(note, csrf).then((response) => {
+            if (response.status == 204) {
+                dispatch(setIsFormUploading(false))
+                dispatch(deleteNote(note))
+                dispatch(showMessage('Заметка успешно удалена'))
+            }
+        }).catch((error) => {
+            handleError(error, dispatch)
+        })
+    }
+}
+
 
 export const fetchCSRF = () => {
     return (dispatch) => {
@@ -87,8 +132,20 @@ export const setIniting = (isIniting) => {
     return { type: SET_INIT, payload: isIniting }
 }
 
-export const setError = (error) => {
-    return { type: SET_ERROR, payload: error }
+export const showError = (error) => {
+    return { type: SHOW_ERROR, payload: error }
+}
+
+export const hideError = () => {
+    return { type: HIDE_ERROR }
+}
+
+export const showMessage = (message) => {
+    return { type: SHOW_MESSAGE, payload: message }
+}
+
+export const hideMessage = () => {
+    return { type: HIDE_MESSAGE }
 }
 
 export const setIsFormUploading = (isFormUploading) => {
@@ -97,4 +154,16 @@ export const setIsFormUploading = (isFormUploading) => {
 
 export const setCSRF = (csrf) => {
     return { type: SET_CSRF, payload: csrf }
+}
+
+export const setNotes = (notes) => {
+    return { type: SET_NOTES, payload: notes }
+}
+
+export const addNote = (note) => {
+    return { type: ADD_NOTES, payload: [ note ] }
+}
+
+export const deleteNote = (note) => {
+    return { type: DELETE_NOTE, payload: note }
 }

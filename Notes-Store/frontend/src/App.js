@@ -9,6 +9,7 @@ import { Spinner } from 'react-bootstrap';
 import CSRF from './components/csrf/CSRF';
 import ErrorAlert from './components/errorAlert/ErrorAlert';
 import MainPage from './pages/MainPage';
+import InfoAlert from './components/infoAlert/InfoAlert';
 
 function App({ isAuthenticated, isIniting, checkIsAuthenticated }) {
 
@@ -35,6 +36,7 @@ function App({ isAuthenticated, isIniting, checkIsAuthenticated }) {
           <CSRF/>
           <NavBar />
           <ErrorAlert/>
+          <InfoAlert/>
           <Routes>
             {isAuthenticated ? getRoutes(privateRoutes) : getRoutes(publicRoutes)}
             <Route path='*' element={<MainPage/>} />

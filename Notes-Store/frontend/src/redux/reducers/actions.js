@@ -15,9 +15,13 @@ const setIsAuth = (isAuthenticated) => {
 
 const handleError = (error, dispatch) => {
     const ts = new TranslationService()
-    if (error.response.data['error'])
+    if (!error.response || error.response.status === 500) {
+        dispatch(showError('Ошибка сервера'))
+    } else if (error.response.data['error']) {
         dispatch(showError(ts.translate(error.response.data['error'])))
-    else {
+    } else if (error.response.data['detail']) {
+        dispatch(showError(ts.translate(error.response.data['detail'])))
+    } else {
         let errorMessage = ''
         for (const key in error.response.data) {
             errorMessage += ts.translate(key) + ': '
@@ -25,10 +29,10 @@ const handleError = (error, dispatch) => {
                 errorMessage += ts.translate(message)
             }
             errorMessage += '\n'
-            
         }
         dispatch(showError(errorMessage))
     }
+    
 }
 
 export const checkIsAuthenticated = () => {
@@ -50,7 +54,6 @@ export const login = (email, password, csrf) => {
             dispatch(setCSRF(''))
             dispatch(setIsFormUploading(false))
             dispatch(setIsAuth(true))
-            dispatch(hideError())
         }).catch((error) => {
             dispatch(setIsFormUploading(false))
             handleError(error, dispatch)
@@ -63,7 +66,7 @@ export const register = (email, password, csrf) => {
         dispatch(setIsFormUploading(true))
         AuthService.register(email, password, csrf).then((_) => {
             dispatch(setIsFormUploading(false))
-            dispatch(hideError())
+            dispatch(showMessage('Регистрация прошла успешно'))
         }).catch((error) => {
             dispatch(setIsFormUploading(false))
             handleError(error, dispatch)
@@ -74,9 +77,7 @@ export const register = (email, password, csrf) => {
 export const fetchNotes = () => {
     return (dispatch) => {
         NotesService.fetchNotes().then((response) => {
-            if (response.status == 200) {
-                dispatch(setNotes(response.data))
-            }
+            dispatch(setNotes(response.data))
         }).catch((error) => {
             handleError(error, dispatch)
         })
@@ -87,26 +88,23 @@ export const sendNote = (note, csrf) => {
     return (dispatch) => {
         dispatch(setIsFormUploading(true))
         NotesService.sendNote(note, csrf).then((response) => {
-            if (response.status == 201) {
-                dispatch(setIsFormUploading(false))
-                dispatch(addNote(response.data))
-                dispatch(showMessage('Заметка успешно добавлена'))
-            }
-        }).catch((error) => {``
+            dispatch(setIsFormUploading(false))
+            dispatch(addNote(response.data))
+            dispatch(showMessage('Заметка успешно добавлена'))
+        }).catch((error) => {
+            ``
             handleError(error, dispatch)
         })
     }
-} 
+}
 
 export const requestDeleteNote = (note, csrf) => {
     return (dispatch) => {
         dispatch(setIsFormUploading(true))
         NotesService.deleteNote(note, csrf).then((response) => {
-            if (response.status == 204) {
-                dispatch(setIsFormUploading(false))
-                dispatch(deleteNote(note))
-                dispatch(showMessage('Заметка успешно удалена'))
-            }
+            dispatch(setIsFormUploading(false))
+            dispatch(deleteNote(note))
+            dispatch(showMessage('Заметка успешно удалена'))
         }).catch((error) => {
             handleError(error, dispatch)
         })
@@ -117,11 +115,9 @@ export const requestDeleteNote = (note, csrf) => {
 export const fetchCSRF = () => {
     return (dispatch) => {
         AuthService.getCSRF().then((response) => {
-            if (response.status == 204) {
-                const cookies = new Cookies()
-                const csrf = cookies.get('csrftoken')
-                dispatch(setCSRF(csrf))
-            }
+            const cookies = new Cookies()
+            const csrf = cookies.get('csrftoken')
+            dispatch(setCSRF(csrf))
         }).catch((error) => {
             handleError(error, dispatch)
         })
@@ -161,7 +157,7 @@ export const setNotes = (notes) => {
 }
 
 export const addNote = (note) => {
-    return { type: ADD_NOTES, payload: [ note ] }
+    return { type: ADD_NOTES, payload: [note] }
 }
 
 export const deleteNote = (note) => {

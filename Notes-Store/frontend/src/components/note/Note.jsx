@@ -13,7 +13,7 @@ const Note = ({ note, width, csrf, height, deleteNote }) => {
         <Card>
             <Card.Body style={{ width: width, height: height }}>
                 <div className='h-75'>
-                    <Card.Title>Заметка</Card.Title>
+                    <Card.Title>{note.header}</Card.Title>
                     <Card.Text className='h-75' style={{ overflow: 'hidden', display: 'block' }}>
                         {note.body}
                     </Card.Text>

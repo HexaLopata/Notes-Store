@@ -23,7 +23,7 @@ const LoginPage = ({ csrf, login, showError }) => {
             <Container>
                 <h1>Логин</h1>
                 <Form onSubmit={submit}>
-                    <Form.Group className='mb-3' controlId='formBasicEmail'>
+                    <Form.Group className='mb-3'>
                         <Form.Label>Электронная почта</Form.Label>
                         <Form.Control
                             type='email'
@@ -34,7 +34,7 @@ const LoginPage = ({ csrf, login, showError }) => {
                         />
                     </Form.Group>
 
-                    <Form.Group className='mb-3' controlId='formBasicPassword'>
+                    <Form.Group className='mb-3'>
                         <Form.Label>Пароль</Form.Label>
                         <Form.Control
                             type='password'

@@ -15,7 +15,6 @@ const InfoAlert = ({ message, lifeTime = 5000, hideMessage }) => {
                 clearTimeout(timeout)
             }
         }
-        
     }, [message])
 
     return (

@@ -16,8 +16,8 @@ const NotesPage = ({ notes, fetchNotes }) => {
             <div className='d-flex flex-wrap justify-content-center mt-4'>
                 {notes.map((note) => {
                     return (
-                        <div className='p-1'>
-                            <Note width={'250px'} height={'250px'} note={note} key={note.id} />
+                        <div className='p-1' key={note.id}>
+                            <Note width={'250px'} height={'250px'} note={note}/>
                         </div>
                     )
                 })}

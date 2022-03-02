@@ -8,7 +8,8 @@ export default class NotesService {
     static sendNote(note, csrf) {
         return axios.post('/api/note/', {
             'body': note.body,
-            'priority': note.priority
+            'priority': note.priority,
+            'header': note.header
         }, { headers: { 'X-CSRFToken': csrf } })
     }
 

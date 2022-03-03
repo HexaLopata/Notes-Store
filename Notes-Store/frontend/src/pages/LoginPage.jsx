@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Form, Button, Container } from 'react-bootstrap'
+import { Form, Container } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { login, showError } from '../redux/reducers/actions'
+import FormButton from '../components/formButton/FormButton'
 
 const LoginPage = ({ csrf, login, showError }) => {
     const [email, setEmail] = useState('')

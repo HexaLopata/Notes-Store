@@ -71,7 +71,7 @@ export const logout = (csrf) => {
         }).catch((error) => {
             handleError(error, dispatch)
         }).finally(() => {
-            setIsFormUploading(false)
+            dispatch(setIsFormUploading(false))
         })
     }
 }

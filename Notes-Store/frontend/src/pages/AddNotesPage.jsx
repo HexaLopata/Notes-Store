@@ -1,9 +1,10 @@
 import { useState } from "react"
 import { Container, Form, FloatingLabel, Button } from "react-bootstrap"
 import { connect } from "react-redux"
-import { addNote, sendNote } from "../redux/reducers/actions"
+import FormButton from "../components/formButton/FormButton"
+import { sendNote, showError } from "../redux/reducers/actions"
 
-const AddNotesPage = ({ csrf, sendNote }) => {
+const AddNotesPage = ({ csrf, sendNote, showError }) => {
     const [priority, setPriority] = useState(0)
     const [body, setBody] = useState('')
     const [header, setHeader] = useState('')
@@ -11,7 +12,10 @@ const AddNotesPage = ({ csrf, sendNote }) => {
     const submit = (e) => {
         e.preventDefault()
         const note = { body, priority: Math.ceil(priority * 0.1), header }
-        sendNote(note, csrf)
+        if (body && header)
+            sendNote(note, csrf)
+        else
+            showError('Поля не должны быть пустыми')
     }
 
     return (
@@ -45,9 +49,9 @@ const AddNotesPage = ({ csrf, sendNote }) => {
                     id='priority'
                 >
                 </Form.Range>
-                <Button variant='primary' type='submit'>
+                <FormButton variant='primary' type='submit'>
                     Принять
-                </Button>
+                </FormButton>
             </Form>
         </Container>
     )
@@ -61,7 +65,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         sendNote: (note, csrf) => dispatch(sendNote(note, csrf)),
-        showMessage: (message) => dispatch(showMessage(message))
+        showError: (error) => dispatch(showError(error))
     }
 }
 

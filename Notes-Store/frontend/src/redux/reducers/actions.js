@@ -32,17 +32,18 @@ const handleError = (error, dispatch) => {
         }
         dispatch(showError(errorMessage))
     }
-    
+
 }
 
 export const checkIsAuthenticated = () => {
     return (dispatch) => {
         dispatch(setIniting(true))
         AuthService.checkIsAuthenticated().then((response) => {
-            dispatch(setIniting(false))
             dispatch(setIsAuth(response.data.isAuthenticated))
         }).catch((error) => {
             handleError(error, dispatch)
+        }).finally(() => {
+            dispatch(setIniting(false))
         })
     }
 }
@@ -52,11 +53,25 @@ export const login = (email, password, csrf) => {
         dispatch(setIsFormUploading(true))
         AuthService.login(email, password, csrf).then((_) => {
             dispatch(setCSRF(''))
-            dispatch(setIsFormUploading(false))
             dispatch(setIsAuth(true))
         }).catch((error) => {
-            dispatch(setIsFormUploading(false))
             handleError(error, dispatch)
+        }).finally(() => {
+            dispatch(setIsFormUploading(false))
+        })
+    }
+}
+
+export const logout = (csrf) => {
+    return (dispatch) => {
+        dispatch(setIsFormUploading(true))
+        AuthService.logout(csrf).then((_) => {
+            dispatch(setIsAuth(false))
+            dispatch(setCSRF(''))
+        }).catch((error) => {
+            handleError(error, dispatch)
+        }).finally(() => {
+            setIsFormUploading(false)
         })
     }
 }
@@ -65,11 +80,11 @@ export const register = (email, password, csrf) => {
     return (dispatch) => {
         dispatch(setIsFormUploading(true))
         AuthService.register(email, password, csrf).then((_) => {
-            dispatch(setIsFormUploading(false))
             dispatch(showMessage('Регистрация прошла успешно'))
         }).catch((error) => {
-            dispatch(setIsFormUploading(false))
             handleError(error, dispatch)
+        }).finally(() => {
+            dispatch(setIsFormUploading(false))
         })
     }
 }
@@ -88,12 +103,12 @@ export const sendNote = (note, csrf) => {
     return (dispatch) => {
         dispatch(setIsFormUploading(true))
         NotesService.sendNote(note, csrf).then((response) => {
-            dispatch(setIsFormUploading(false))
             dispatch(addNote(response.data))
             dispatch(showMessage('Заметка успешно добавлена'))
         }).catch((error) => {
-            ``
             handleError(error, dispatch)
+        }).finally(() => {
+            dispatch(setIsFormUploading(false))
         })
     }
 }
@@ -102,11 +117,12 @@ export const requestDeleteNote = (note, csrf) => {
     return (dispatch) => {
         dispatch(setIsFormUploading(true))
         NotesService.deleteNote(note, csrf).then((response) => {
-            dispatch(setIsFormUploading(false))
             dispatch(deleteNote(note))
             dispatch(showMessage('Заметка успешно удалена'))
         }).catch((error) => {
             handleError(error, dispatch)
+        }).finally(() => {
+            dispatch(setIsFormUploading(false))
         })
     }
 }

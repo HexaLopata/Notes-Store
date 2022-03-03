@@ -43,9 +43,9 @@ const LoginPage = ({ csrf, login, showError }) => {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </Form.Group>
-                    <Button variant='primary' type='submit'>
+                    <FormButton variant='primary' type='submit'>
                         Принять
-                    </Button>
+                    </FormButton>
                 </Form>
             </Container>
         </div>

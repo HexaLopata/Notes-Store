@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { HOST_URL } from '../global/routes';
 
 export default class AuthService {
     static checkIsAuthenticated() {
@@ -18,6 +17,10 @@ export default class AuthService {
             'username': email,
             'password': password
         }, { headers:  {'X-CSRFToken': csrf } })  
+    }
+
+    static logout(csrf) {
+        return axios.post('/api/auth/logout/', {}, { headers: { 'X-CSRFToken': csrf } })
     }
 
     static getCSRF() {

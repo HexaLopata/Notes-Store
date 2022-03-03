@@ -1,9 +1,9 @@
-import { Card } from 'react-bootstrap'
+import { Card, Spinner } from 'react-bootstrap'
 import { Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { requestDeleteNote } from '../../redux/reducers/actions'
 
-const Note = ({ note, width, csrf, height, deleteNote }) => {
+const Note = ({ note, width, csrf, isFormUploading, height, deleteNote }) => {
 
     const onClickDelete = () => {
         deleteNote(note, csrf)
@@ -19,13 +19,17 @@ const Note = ({ note, width, csrf, height, deleteNote }) => {
                     </Card.Text>
                 </div>
                 <div className='h-25'>
-                    <Button
-                        style={{ height: '50px' }}
-                        variant='danger'
-                        onClick={onClickDelete}
-                    >
-                        Удалить
-                    </Button>
+                    {!isFormUploading ?
+                        <Button
+                            style={{ height: '50px' }}
+                            variant='danger'
+                            onClick={onClickDelete}
+                        >
+                            Удалить
+                        </Button>
+                        :
+                        <Spinner animation="border" variant="danger" />
+                    }
                 </div>
             </Card.Body>
         </Card>
@@ -34,7 +38,8 @@ const Note = ({ note, width, csrf, height, deleteNote }) => {
 
 const mapStateToProps = (state, ownProps) => {
     const csrf = state.app.csrf
-    return { csrf, ...ownProps }
+    const isFormUploading = state.app.isFormUploading
+    return { csrf, isFormUploading, ...ownProps }
 }
 
 const mapDispatchToProps = (dispatch) => {

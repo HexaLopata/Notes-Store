@@ -1,9 +1,10 @@
 import { connect } from 'react-redux';
 import { privateRoutes, publicRoutes } from '../../global/routes'
 import { LinkContainer } from 'react-router-bootstrap'
-import { Navbar, Container, Nav } from 'react-bootstrap'
+import { Navbar, Container, Nav, Button } from 'react-bootstrap'
+import { logout } from '../../redux/reducers/actions';
 
-const NavBar = ({ isAuthenticated }) => {
+const NavBar = ({ isAuthenticated, csrf, logout }) => {
 
     const getButtons = (routes) => {
         return routes.map((route) => {
@@ -15,6 +16,10 @@ const NavBar = ({ isAuthenticated }) => {
         })
     }
 
+    const onExitClick = () => {
+        logout(csrf)
+    }
+
     return (
         <Navbar bg='light' expand='lg'>
             <Container fluid>
@@ -24,6 +29,7 @@ const NavBar = ({ isAuthenticated }) => {
                     <Nav className='me-auto'>
                         {isAuthenticated ? getButtons(privateRoutes) : getButtons(publicRoutes)}
                     </Nav>
+                    {isAuthenticated ? <Button onClick={onExitClick}>Выйти</Button> : <></>}
                 </Navbar.Collapse>
             </Container>
         </Navbar>
@@ -32,7 +38,14 @@ const NavBar = ({ isAuthenticated }) => {
 
 const mapStateToProps = (state, ownProps) => {
     const { isAuthenticated } = state.auth
-    return { isAuthenticated, ...ownProps }
+    const { csrf } = state.app
+    return { isAuthenticated, csrf, ...ownProps }
 }
 
-export default connect(mapStateToProps)(NavBar)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        logout: (csrf) => dispatch(logout(csrf))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar)

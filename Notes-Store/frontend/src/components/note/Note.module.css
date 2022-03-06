@@ -1,0 +1,39 @@
+.date {
+    opacity: 0.7;
+    font-size: small;
+}
+
+.priorityBar {
+    height: 5px;
+    width: 100%;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+
+.redBar {
+    background-color: #c9393f;
+}
+
+.yellowBar {
+    background-color: #e3e000;
+}
+
+.greenBar {
+    background-color: #1db958;
+}
+
+.active {
+    opacity: 1;
+}
+
+.hidden {
+    opacity: 0;
+}
+
+.fixed {
+    position: fixed !important;
+}
+
+.fading {
+    transition: opacity .4s ease-in, transform .4s ease-out !important;
+}

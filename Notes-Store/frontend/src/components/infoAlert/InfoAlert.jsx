@@ -1,30 +1,15 @@
-import { useEffect } from 'react'
-import { Alert } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { hideMessage } from '../../redux/reducers/actions'
+import SmartAlert from '../smartAlert/SmartAlert'
 
 const InfoAlert = ({ message, lifeTime = 5000, hideMessage }) => {
-
-    useEffect(() => {
-        if (message.trim() !== '') {
-            const timeout = setTimeout(() => {
-                hideMessage()
-            }, lifeTime)
-
-            return () => {
-                clearTimeout(timeout)
-            }
-        }
-    }, [message])
-
     return (
-        <>
-            {message === '' ? <></> :
-                <Alert variant='success'>
-                    {message}
-                </Alert>
-            }
-        </>
+        <SmartAlert
+            message={message}
+            variant='success'
+            hideAlert={hideMessage}
+            lifeTime={lifeTime}
+        />
     )
 }
 

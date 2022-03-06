@@ -12,8 +12,6 @@ const LoginPage = ({ csrf, login, showError }) => {
         e.preventDefault()
         if (email && password) {
             login(email, password, csrf)
-            setPassword('')
-            setEmail('')
         } else {
             showError('Поля не должны быть пустыми')
         }

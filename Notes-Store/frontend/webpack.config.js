@@ -26,25 +26,19 @@ module.exports = {
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                use: [ "babel-loader" ]
+                use: ["babel-loader"]
             },
             {
-                test: /\.module.css$/,
+                test: /^(?!.*?\.module).*\.css$/,
+                use: ['style-loader', 'css-loader']
+            },
+            {
+                test: /\.module\.css$/,
                 use: [
-                    "style-loader",
+                    'style-loader',
                     {
-                        loader: "css-loader",
+                        loader: 'css-loader',
                         options: { modules: true }
-                    }
-                ]
-            },
-            {
-                test: /\.css$/,
-                use: [
-                    "style-loader",
-                    {
-                        loader: "css-loader",
-                        options: { modules: false }
                     }
                 ]
             }

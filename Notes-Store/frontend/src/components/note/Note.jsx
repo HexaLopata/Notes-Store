@@ -1,25 +1,45 @@
+import { useMemo } from 'react'
 import { Card, Spinner } from 'react-bootstrap'
 import { Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
+import { useTransition } from '../../hooks/useTransition'
 import { requestDeleteNote } from '../../redux/reducers/actions'
+import DateTimeService from '../../services/DateTimeService'
+import classes from './Note.module.css'
 
-const Note = ({ note, width, csrf, isFormUploading, height, deleteNote }) => {
+const Note = ({ note, width, csrf, height, deleteNote }) => {
 
     const onClickDelete = () => {
-        deleteNote(note, csrf)
+        makeTransition(classes.fading, classes.hidden, '', 400, () => { deleteNote(note, csrf) })
     }
+
+    const getPriorityBarClasses = () => {
+        let result = classes.priorityBar + ' '
+        if (note.priority < 4) {
+            result += classes.greenBar
+        } else if (note.priority < 8) {
+            result += classes.yellowBar
+        } else {
+            result += classes.redBar
+        }
+        return result
+    }
+
+    const dateTime = useMemo(() => DateTimeService.format(note.date), [note.date])
+    const [transitionClasses, isMakingTransition, makeTransition] = useTransition(classes.active)
 
     return (
         <Card>
-            <Card.Body style={{ width: width, height: height }}>
-                <div className='h-75'>
+            <div className={getPriorityBarClasses()}></div>
+            <Card.Body className={transitionClasses} style={{ width: width, height: height }}>
+                <div className='h-75' style={{ overflow: 'hidden', display: 'block' }}>
                     <Card.Title>{note.header}</Card.Title>
-                    <Card.Text className='h-75' style={{ overflow: 'hidden', display: 'block' }}>
+                    <Card.Text className='h-75 p-2'>
                         {note.body}
                     </Card.Text>
                 </div>
-                <div className='h-25'>
-                    {!isFormUploading ?
+                <div className='h-25 d-flex justify-content-between'>
+                    {!isMakingTransition ?
                         <Button
                             style={{ height: '50px' }}
                             variant='danger'
@@ -30,6 +50,9 @@ const Note = ({ note, width, csrf, isFormUploading, height, deleteNote }) => {
                         :
                         <Spinner animation="border" variant="danger" />
                     }
+                    <div className={'d-flex align-items-end flex-row ' + classes.date}>
+                        {dateTime}
+                    </div>
                 </div>
             </Card.Body>
         </Card>
@@ -38,8 +61,7 @@ const Note = ({ note, width, csrf, isFormUploading, height, deleteNote }) => {
 
 const mapStateToProps = (state, ownProps) => {
     const csrf = state.app.csrf
-    const isFormUploading = state.app.isFormUploading
-    return { csrf, isFormUploading, ...ownProps }
+    return { csrf, ...ownProps }
 }
 
 const mapDispatchToProps = (dispatch) => {

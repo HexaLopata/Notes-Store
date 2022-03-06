@@ -12,8 +12,12 @@ const AddNotesPage = ({ csrf, sendNote, showError }) => {
     const submit = (e) => {
         e.preventDefault()
         const note = { body, priority: Math.ceil(priority * 0.1), header }
-        if (body && header)
-            sendNote(note, csrf)
+        if (body && header) {
+            if (header.length <= 40)
+                sendNote(note, csrf)
+            else
+                showError('Длина заголовка не должна превышать 40 символов')
+        }
         else
             showError('Поля не должны быть пустыми')
     }

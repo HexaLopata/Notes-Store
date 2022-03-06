@@ -1,0 +1,21 @@
+.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.hidden {
+    opacity: 0;
+    transform: translateX(250px);
+}
+
+.fixed {
+    position: fixed !important;
+}
+
+.fading {
+    transition: opacity .4s ease-in, transform .4s ease-out !important;
+}
+
+.appearing {
+    transition: opacity .4s ease-in, transform .4s ease-out !important;
+}

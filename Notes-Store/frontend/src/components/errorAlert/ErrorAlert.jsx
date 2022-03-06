@@ -1,30 +1,15 @@
-import { useEffect } from 'react'
-import { Alert } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { hideError } from '../../redux/reducers/actions'
+import SmartAlert from '../smartAlert/SmartAlert'
 
 const ErrorAlert = ({ error, lifeTime = 5000, hideError }) => {
-
-    useEffect(() => {
-        if (error.trim() !== '') {
-            const timeout = setTimeout(() => {
-                hideError()
-            }, lifeTime)
-
-            return () => {
-                clearTimeout(timeout)
-            }
-        }
-    }, [error])
-
     return (
-        <>
-            {error === '' ? <></> :
-                <Alert variant='danger'>
-                    {error}
-                </Alert>
-            }
-        </>
+        <SmartAlert 
+            message={error}
+            variant='danger'
+            hideAlert={hideError} 
+            lifeTime={lifeTime}   
+        />
     )
 }
 

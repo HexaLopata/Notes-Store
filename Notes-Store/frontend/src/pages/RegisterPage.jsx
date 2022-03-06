@@ -7,13 +7,16 @@ import FormButton from '../components/formButton/FormButton'
 const RegisterPage = ({ csrf, register, showError }) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [rePassword, setRePassword] = useState('')
 
     const submit = (e) => {
         e.preventDefault()
-        if (email && password) {
-            register(email, password, csrf)
-            setPassword('')
-            setEmail('')
+        if (email && password && rePassword) {
+            if (password === rePassword) {
+                register(email, password, csrf)
+            } else {
+                showError('Пароли не совпадают')
+            }
         } else {
             showError('Поля не должны быть пустыми')
         }
@@ -41,6 +44,15 @@ const RegisterPage = ({ csrf, register, showError }) => {
                             placeholder='Пароль'
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </Form.Group>
+                    <Form.Group className='mb-3' controlId='formBasicPassword'>
+                        <Form.Label>Повтор пароля</Form.Label>
+                        <Form.Control
+                            type='password'
+                            placeholder='Повтор пароля'
+                            value={rePassword}
+                            onChange={(e) => setRePassword(e.target.value)}
                         />
                     </Form.Group>
                     <FormButton variant='primary' type='submit'>

@@ -29,9 +29,9 @@ const Note = ({ note, width, csrf, height, deleteNote }) => {
     const [transitionClasses, isMakingTransition, makeTransition] = useTransition(classes.active)
 
     return (
-        <Card>
+        <Card className={transitionClasses}>
             <div className={getPriorityBarClasses()}></div>
-            <Card.Body className={transitionClasses} style={{ width: width, height: height }}>
+            <Card.Body  style={{ width: width, height: height }}>
                 <div className='h-75' style={{ overflow: 'hidden', display: 'block' }}>
                     <Card.Title>{note.header}</Card.Title>
                     <Card.Text className='h-75 p-2'>

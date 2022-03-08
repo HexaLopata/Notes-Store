@@ -6,13 +6,6 @@ import Cookies from 'universal-cookie'
 import TranslationService from '../../services/TranslationService'
 import NotesService from '../../services/NotesService'
 
-const setIsAuth = (isAuthenticated) => {
-    return {
-        type: SET_IS_AUTH,
-        payload: isAuthenticated
-    }
-}
-
 const handleError = (error, dispatch) => {
     const ts = new TranslationService()
     if (!error.response || error.response.status === 500) {
@@ -138,6 +131,10 @@ export const fetchCSRF = () => {
             handleError(error, dispatch)
         })
     }
+}
+
+const setIsAuth = (isAuthenticated) => {
+    return { type: SET_IS_AUTH, payload: isAuthenticated }
 }
 
 export const setIniting = (isIniting) => {

@@ -11,4 +11,5 @@ RUN apk add --update --no-cache --virtual .tmp-build-deps \
     gcc libc-dev linux-headers postgresql-dev npm && \
     pip install --no-cache-dir -r /notes_store/requirements.txt \
     cd frontend \
-    npm install
+    npm install \
+    npm run build

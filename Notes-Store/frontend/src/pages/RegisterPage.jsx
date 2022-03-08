@@ -11,7 +11,7 @@ const RegisterPage = ({ csrf, register, showError }) => {
 
     const submit = (e) => {
         e.preventDefault()
-        if (email && password && rePassword) {
+        if (email.trim() && password.trim() && rePassword.trim()) {
             if (password === rePassword) {
                 register(email, password, csrf)
             } else {

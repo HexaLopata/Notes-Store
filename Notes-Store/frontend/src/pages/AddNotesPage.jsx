@@ -12,7 +12,7 @@ const AddNotesPage = ({ csrf, sendNote, showError }) => {
     const submit = (e) => {
         e.preventDefault()
         const note = { body, priority: Math.ceil(priority * 0.1), header }
-        if (body && header) {
+        if (body.trim() && header.trim()) {
             if (header.length <= 40)
                 sendNote(note, csrf)
             else

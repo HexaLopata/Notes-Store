@@ -10,7 +10,7 @@ const LoginPage = ({ csrf, login, showError }) => {
 
     const submit = (e) => {
         e.preventDefault()
-        if (email && password) {
+        if (email.trim() && password.trim()) {
             login(email, password, csrf)
         } else {
             showError('Поля не должны быть пустыми')
